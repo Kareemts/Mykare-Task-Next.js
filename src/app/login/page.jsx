@@ -1,10 +1,68 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
-const page = () => {
+const Page = () => {
+  const router = useRouter();
+  const [login, setLogin] = useState({
+    userName: "",
+    password: "",
+  });
+
+  const adminCredentials = {
+    name: "admin",
+    userName: "admin",
+    password: "admin",
+  };
+
+  // for creating admin credentials
+  useEffect(() => {
+    const admin = JSON.parse(localStorage.getItem("myKare_Data")) || [];
+
+    const adminData = admin.find(
+      (user) => user.userName === adminCredentials.userName
+    );
+    if (!adminData) {
+      localStorage.setItem("myKare_Data", JSON.stringify([adminCredentials]));
+    }
+  }, []);
+
+  // for storing the user credentials into login state
+  const credentials = (value) => {
+    setLogin((pre) => ({ ...pre, ...value }));
+  };
+
+
+  // for user login
+  const handleSubmit = () => {
+    if (login.userName === "" || login.password === "") {
+      toast("Enter login credentials");
+    } else {
+      const prevCredentials =
+        JSON.parse(localStorage.getItem("myKare_Data")) || [];
+      const loggedUser = prevCredentials.find(
+        (user) =>
+          user.userName === login.userName && user.password === login.password
+      );
+
+      if (loggedUser) {
+        localStorage.setItem("myKare_logged_User", JSON.stringify(loggedUser));
+        loggedUser?.userName === "admin"
+          ? router.push("/admin-dashboard")
+          : router.push("/");
+      } else {
+        toast("User name or password is incorrect");
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center ">
-      <div className="bg-[#183D3D] p-12 rounded-xl shadow-md w-full sm:w-96">
+      <div className="sm:bg-[#183D3D] p-12 rounded-xl shadow-md w-full sm:w-96">
         <h2 className="text-2xl text-[#93B1A6] font-semibold mb-6 text-center ">
           Login
         </h2>
@@ -21,6 +79,8 @@ const page = () => {
               id="user-name"
               className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-[#93B1A6]"
               placeholder="Enter your user name"
+              value={login.userName}
+              onChange={(e) => credentials({ userName: e.target.value })}
             />
           </div>
           <div>
@@ -35,11 +95,14 @@ const page = () => {
               id="password"
               className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-[#93B1A6]"
               placeholder="Enter your password"
+              value={login.password}
+              onChange={(e) => credentials({ password: e.target.value })}
             />
           </div>
           <button
             type="submit"
             className="w-full bg-[#5C8374] text-white py-2 rounded-md hover:bg-[#93B1A6] transition duration-300"
+            onClick={handleSubmit}
           >
             Login
           </button>
@@ -55,4 +118,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
