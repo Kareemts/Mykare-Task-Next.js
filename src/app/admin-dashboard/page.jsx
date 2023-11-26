@@ -3,7 +3,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-export default function Home() {
+
+export default function Dashboard() {
   const router = useRouter();
   const [users, setUsers] = useState([]);
 
@@ -11,12 +12,10 @@ export default function Home() {
     setUsers(JSON.parse(localStorage.getItem("myKare_Data")));
   }, []);
 
-
-
   // for logout fuctionality
   const handleLogout = () => {
     localStorage.removeItem("myKare_logged_User");
-    router.push("/login");
+    router.push("/");
   };
 
   return (
@@ -46,9 +45,7 @@ export default function Home() {
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <tr
-                key={index}
-              >
+              <tr key={index}>
                 <td className="border border-gray-300 px-4 py-2">
                   {index + 1}
                 </td>

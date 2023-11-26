@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-const Page = () => {
+
+const Signup = () => {
   const router = useRouter();
   const [signup, setSignup] = useState({
     name: "",
@@ -110,7 +111,7 @@ const Page = () => {
         </div>
         <span className="text-sm font-normal flex justify-center p-3 mt-5 gap-1">
           <p className="text-[#93B1A6]">Have an account? </p>
-          <Link href={"/login"} className="text-blue-400 cursor-pointer">
+          <Link href={"/"} className="text-blue-400 cursor-pointer">
             Login
           </Link>
         </span>
@@ -119,4 +120,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Signup;
